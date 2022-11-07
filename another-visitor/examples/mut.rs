@@ -1,5 +1,4 @@
-use another_visitor::VisitorMut;
-use another_visitor_macros::{Visitable, VisitableMut, VisitorMut};
+use another_visitor::{Visitable, VisitableMut, VisitorMut};
 
 #[derive(Visitable, VisitableMut)]
 struct A {

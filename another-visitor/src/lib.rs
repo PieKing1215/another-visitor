@@ -1,5 +1,10 @@
 use downcast_rs::{impl_downcast, Downcast};
 
+pub use another_visitor_macros::Visitable;
+pub use another_visitor_macros::VisitableMut;
+pub use another_visitor_macros::Visitor;
+pub use another_visitor_macros::VisitorMut;
+
 pub trait Visitable: Downcast {
     fn children(&self) -> Vec<&dyn Visitable>;
 }

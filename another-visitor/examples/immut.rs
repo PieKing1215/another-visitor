@@ -1,5 +1,4 @@
-use another_visitor::Visitor;
-use another_visitor_macros::{Visitable, Visitor};
+use another_visitor::{Visitable, Visitor};
 
 #[derive(Visitable)]
 struct A {
