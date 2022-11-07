@@ -1,8 +1,13 @@
 [package]
 name = "another-visitor"
 version = "0.1.0"
+authors = ["PieKing1215"]
+license = "MIT OR Apache-2.0"
+readme = "README.md"
+repository = "https://github.com/PieKing1215/another-visitor"
+keywords = ["visitor", "derive", "macro"]
 edition = "2021"
 
 [dependencies]
-another-visitor-macros = { path = "../another-visitor-macros" }
+another-visitor-macros = { version = "0.1.0", path = "../another-visitor-macros" }
 downcast-rs = "1.2"
