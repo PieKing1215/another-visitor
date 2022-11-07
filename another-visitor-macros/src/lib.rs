@@ -4,31 +4,51 @@
 
 use proc_macro::{self, TokenStream};
 use quote::{format_ident, quote, ToTokens};
-use syn::{parse_macro_input, Attribute, Data, DeriveInput, Field, Ident, Meta, NestedMeta};
+use syn::{parse_macro_input, Attribute, Data, DeriveInput, Ident, Meta, NestedMeta};
 
 #[proc_macro_derive(Visitable, attributes(visit))]
 pub fn derive_visitable(input: TokenStream) -> TokenStream {
     let DeriveInput { ident, data, .. } = parse_macro_input!(input);
-    let fields: proc_macro2::TokenStream = if let Data::Struct(struct_) = data {
-        struct_
+    let children: proc_macro2::TokenStream = match data {
+        Data::Struct(struct_) => struct_
             .fields
             .into_iter()
             .filter_map(|f| {
-                if should_skip(&f) {
+                if should_skip(&f.attrs) {
                     None
                 } else {
                     let id = f.ident;
                     Some(quote! { &self.#id, })
                 }
             })
-            .collect()
-    } else {
-        panic!("Only structs can have Visitable derived");
+            .collect(),
+        Data::Enum(enum_) => {
+            let matches: proc_macro2::TokenStream = enum_
+                .variants
+                .into_iter()
+                .filter_map(|v| {
+                    if should_skip(&v.attrs) {
+                        None
+                    } else {
+                        let id = v.ident;
+                        Some(quote! {
+                            Self::#id(i) => i,
+                        })
+                    }
+                })
+                .collect();
+            quote! {
+                match self {
+                    #matches
+                }
+            }
+        },
+        Data::Union(_) => panic!("Deriving Visitable for unions is not supported"),
     };
     let output = quote! {
         impl another_visitor::Visitable for #ident {
             fn children(&self) -> Vec<&dyn another_visitor::Visitable> {
-                vec![#fields]
+                vec![#children]
             }
         }
     };
@@ -38,34 +58,54 @@ pub fn derive_visitable(input: TokenStream) -> TokenStream {
 #[proc_macro_derive(VisitableMut, attributes(visit))]
 pub fn derive_visitable_mut(input: TokenStream) -> TokenStream {
     let DeriveInput { ident, data, .. } = parse_macro_input!(input);
-    let fields: proc_macro2::TokenStream = if let Data::Struct(struct_) = data {
-        struct_
+    let children: proc_macro2::TokenStream = match data {
+        Data::Struct(struct_) => struct_
             .fields
             .into_iter()
             .filter_map(|f| {
-                if should_skip(&f) {
+                if should_skip(&f.attrs) {
                     None
                 } else {
                     let id = f.ident;
                     Some(quote! { &mut self.#id, })
                 }
             })
-            .collect()
-    } else {
-        panic!("Only structs can have Visitable derived");
+            .collect(),
+        Data::Enum(enum_) => {
+            let matches: proc_macro2::TokenStream = enum_
+                .variants
+                .into_iter()
+                .filter_map(|v| {
+                    if should_skip(&v.attrs) {
+                        None
+                    } else {
+                        let id = v.ident;
+                        Some(quote! {
+                            Self::#id(i) => i,
+                        })
+                    }
+                })
+                .collect();
+            quote! {
+                match self {
+                    #matches
+                }
+            }
+        },
+        Data::Union(_) => panic!("Deriving VisitableMut for unions is not supported"),
     };
     let output = quote! {
         impl another_visitor::VisitableMut for #ident {
             fn children_mut(&mut self) -> Vec<&mut dyn another_visitor::VisitableMut> {
-                vec![#fields]
+                vec![#children]
             }
         }
     };
     output.into()
 }
 
-fn should_skip(field: &Field) -> bool {
-    field.attrs.iter().any(|a| {
+fn should_skip(attrs: &[Attribute]) -> bool {
+    attrs.iter().any(|a| {
         if a.path.segments.len() == 1 && a.path.segments[0].ident == "visit" {
             if let Ok(Meta::List(mut meta)) = a.parse_meta() {
                 if let NestedMeta::Meta(Meta::Path(p)) = meta.nested.pop().unwrap().into_value() {
