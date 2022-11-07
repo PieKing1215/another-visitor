@@ -1,18 +1,18 @@
-use another_visitor::{Visitable, VisitableMut, VisitorMut};
+use another_visitor::{VisitableMut, VisitorMut};
 
-#[derive(Visitable, VisitableMut)]
+#[derive(VisitableMut)]
 struct A {
     b1: B,
     b2: B,
 }
 
-#[derive(Visitable, VisitableMut)]
+#[derive(VisitableMut)]
 struct B {
     c1: C,
     c2: C,
 }
 
-#[derive(Visitable, VisitableMut)]
+#[derive(VisitableMut)]
 struct C {
     #[visit(skip)]
     i: i32,

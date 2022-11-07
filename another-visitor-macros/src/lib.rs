@@ -1,4 +1,6 @@
-use core::panic;
+#![deny(clippy::all)]
+#![warn(clippy::pedantic)]
+#![allow(clippy::missing_panics_doc)] // TODO
 
 use proc_macro::{self, TokenStream};
 use quote::{format_ident, quote, ToTokens};
@@ -12,13 +14,11 @@ pub fn derive_visitable(input: TokenStream) -> TokenStream {
             .fields
             .into_iter()
             .filter_map(|f| {
-                let skip = should_skip(&f);
-
-                if !skip {
+                if should_skip(&f) {
+                    None
+                } else {
                     let id = f.ident;
                     Some(quote! { &self.#id, })
-                } else {
-                    None
                 }
             })
             .collect()
@@ -43,13 +43,11 @@ pub fn derive_visitable_mut(input: TokenStream) -> TokenStream {
             .fields
             .into_iter()
             .filter_map(|f| {
-                let skip = should_skip(&f);
-
-                if !skip {
+                if should_skip(&f) {
+                    None
+                } else {
                     let id = f.ident;
                     Some(quote! { &mut self.#id, })
-                } else {
-                    None
                 }
             })
             .collect()
@@ -70,12 +68,12 @@ fn should_skip(field: &Field) -> bool {
     field.attrs.iter().any(|a| {
         if a.path.segments.len() == 1 && a.path.segments[0].ident == "visit" {
             if let Ok(Meta::List(mut meta)) = a.parse_meta() {
-                let val = meta.nested.pop().unwrap().into_value();
-                if let NestedMeta::Meta(meta) = val {
-                    if let Meta::Path(p) = meta {
-                        return p.segments[0].ident == "skip";
-                    }
+                if let NestedMeta::Meta(Meta::Path(p)) = meta.nested.pop().unwrap().into_value() {
+                    return p.segments[0].ident == "skip";
                 }
+                panic!("Invalid use of `visit` attribute");
+            } else {
+                panic!("Invalid use of `visit` attribute");
             }
         }
 
@@ -141,7 +139,7 @@ pub fn derive_visitor_mut(input: TokenStream) -> TokenStream {
     output.into()
 }
 
-fn visit_types_from_attrs(attrs: &Vec<Attribute>) -> Vec<(Ident, proc_macro2::TokenStream)> {
+fn visit_types_from_attrs(attrs: &[Attribute]) -> Vec<(Ident, proc_macro2::TokenStream)> {
     attrs
         .iter()
         .filter(|a| a.path.segments.len() == 1 && a.path.segments[0].ident == "visit")
