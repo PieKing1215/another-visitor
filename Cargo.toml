@@ -1,0 +1,6 @@
+[workspace]
+
+members = [
+    "another-visitor",
+    "another-visitor-macros",
+]

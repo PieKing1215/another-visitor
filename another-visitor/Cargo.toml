@@ -1,0 +1,8 @@
+[package]
+name = "another-visitor"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+another-visitor-macros = { path = "../another-visitor-macros" }
+downcast-rs = "1.2"
