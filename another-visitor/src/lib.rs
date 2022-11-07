@@ -1,3 +1,8 @@
+#![deny(clippy::all)]
+#![warn(clippy::pedantic)]
+
+pub mod std_impls;
+
 use downcast_rs::{impl_downcast, Downcast};
 
 pub use another_visitor_macros::Visitable;
@@ -29,7 +34,8 @@ pub trait Visitor: VisitorHelper {
 
     fn visit_children(&mut self, v: &dyn Visitable) -> Self::Output {
         let mut res = Self::Output::default();
-        for ele in v.children() {
+        let ch = v.children();
+        for ele in ch {
             let v = self.visit(ele);
             res = self.aggregate(res, v);
         }

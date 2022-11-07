@@ -53,7 +53,7 @@ fn main() {
 
 Note that this is a WIP, and many features are not yet implemented:
 - Derive Visitable(Mut) anything other than basic structs
-- Visitable(Mut) impls for any std containers
+- Visitable(Mut) impls for more std containers
 - Good error messages in proc macros
 - Documentation
 
