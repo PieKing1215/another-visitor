@@ -50,9 +50,10 @@ fn main() {
     println!("{}", vis.visit(&dat)); // => "(A (B Hello) (B World!))"
 }
 ```
+See [another-visitor/examples](another-visitor/examples) for more examples.
 
 Note that this is a WIP, and many features are not yet implemented:
-- Derive Visitable(Mut) anything other than basic structs
+- Derive Visitable(Mut) for more types (only basic structs and enums are supported)
 - Visitable(Mut) impls for more std containers
 - Good error messages in proc macros
 - Documentation
