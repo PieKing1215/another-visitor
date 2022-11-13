@@ -52,13 +52,14 @@ fn main() {
 ```
 See [another-visitor/examples](another-visitor/examples) for more examples.
 
-Note that this is a WIP, and many features are not yet implemented:
+## TODO
 - Derive Visitable(Mut) for more types (only basic structs and enums are supported)
 - Visitable(Mut) impls for more std containers
 - Good error messages in proc macros
 - Documentation
+- Publish to crates.io
 
-Also this is my first time working with proc macros so I'm not 100% sure I'm doing everything right.
+This project is a WIP, if you have suggestions for changes or new features, please open an issue!
 
 ## Licenses
 
