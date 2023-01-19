@@ -1,6 +1,8 @@
-# another-visitor
-
-[![crates.io](https://img.shields.io/crates/v/another-visitor.svg)](https://crates.io/crates/another-visitor)
+<h1>another-visitor<br>
+  <a href="https://github.com/PieKing1215/another-visitor/actions/workflows/rust_build_test.yml"><img alt="GitHub Workflow Status" src="https://img.shields.io/github/actions/workflow/status/PieKing1215/another-visitor/rust_build_test.yml"></a>
+  <a href="https://crates.io/crates/another-visitor"><img alt="Crates.io" src="https://img.shields.io/crates/v/another-visitor"></a>
+  <a href="https://github.com/PieKing1215/another-visitor/commits/master"><img alt="GitHub commits since latest release" src="https://img.shields.io/github/commits-since/PieKing1215/another-visitor/latest"></a>
+</h1>
 
 A crate that lets you derive visitor pattern implementations for your structs.<br>
 Made because I couldn't find an existing crate supporting the exact pattern I wanted.
