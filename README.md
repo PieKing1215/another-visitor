@@ -1,5 +1,7 @@
 # another-visitor
 
+[![crates.io](https://img.shields.io/crates/v/another-visitor.svg)](https://crates.io/crates/another-visitor)
+
 A crate that lets you derive visitor pattern implementations for your structs.<br>
 Made because I couldn't find an existing crate supporting the exact pattern I wanted.
 
@@ -57,7 +59,7 @@ See [another-visitor/examples](another-visitor/examples) for more examples.
 - Visitable(Mut) impls for more std containers
 - Good error messages in proc macros
 - Documentation
-- Publish to crates.io
+- Tests
 
 This project is a WIP, if you have suggestions for changes or new features, please open an issue!
 
