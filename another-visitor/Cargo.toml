@@ -5,6 +5,7 @@ authors = ["PieKing1215"]
 license = "MIT OR Apache-2.0"
 readme = "../README.md"
 repository = "https://github.com/PieKing1215/another-visitor"
+description = "Lets you derive visitor pattern implementations"
 keywords = ["visitor", "derive", "macro"]
 edition = "2021"
 
